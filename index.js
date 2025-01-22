@@ -73,3 +73,4 @@ console.log(myArray); /*add new element*/
 
 myArray.splice(2,4);
 console.log(myArray);
+
