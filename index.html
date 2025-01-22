@@ -11,17 +11,16 @@
       <div class="container">
         <h1>Mariam's Birthday Soiree 🎉</h1>
         <div>
-          <button onclick="toggleList('all')">View all guests 📃</button>
-          <button onclick="toggleList('eligible')">view eligible guests 💌</button>
+          <button onclick="toggleList('all')">View all guests 📃 </button>
+          <button onclick="toggleList('eligible')">View eligible guests 💌</button>
         </div>
         <ul id="guest-list"></ul>
         <p class="total"></p>
       </div>
-      
     </div>
 
     <script>
-      const guestList = [
+      let guestList = [
         { id: crypto.randomUUID(), name: "Bisola", age: 19 },
         { id: crypto.randomUUID(), name: "Tunde", age: 22 },
         { id: crypto.randomUUID(), name: "Femi", age: 20 },
@@ -32,7 +31,14 @@
         { id: crypto.randomUUID(), name: "Nina", age: 24 },
       ];
 
-      let listVisible = { all: false, eligible: false }; 
+      let listVisible = { all: false, eligible: false };
+
+      // Function to update total age
+      const updateTotalAge = () => {
+        const totalAge = guestList.reduce((accumulator, currentValue) => accumulator + currentValue.age, 0);
+        const totalElement = document.querySelector(".total");
+        totalElement.textContent = `Total Age of Guests: ${totalAge}`;
+      };
 
       // Function to display a list of guests
       const showList = (arr) => {
@@ -40,7 +46,22 @@
         listElement.innerHTML = ""; // Clear the list first
         arr.forEach((item) => {
           const listItem = document.createElement("li");
-          listItem.textContent = `🥳Name: ${item.name}🥳   (Age: ${item.age})`;
+          listItem.textContent = `🥳 Name: ${item.name} 🥳 `;
+          
+          const itemAge = document.createElement("span");
+          itemAge.textContent = ` | Age: ${item.age} `;
+          listItem.appendChild(itemAge);
+          
+          const cancelItem = document.createElement("button");
+          cancelItem.textContent = "❌";
+          cancelItem.style.marginLeft = "10px";
+          cancelItem.addEventListener("click", () => {
+            guestList = guestList.filter((guest) => guest.id !== item.id); // Remove the selected guest
+            showList(guestList); // Refresh the displayed list
+            updateTotalAge(); // Update the total age
+          });
+          listItem.appendChild(cancelItem);
+
           listElement.appendChild(listItem);
         });
       };
@@ -67,13 +88,8 @@
         }
       };
 
-      // Calculate total age using reduce
-      const totalAge = guestList.reduce((accumulator, currentValue) => accumulator + currentValue.age, 0);
-
-      // Display the total age
-      const totalElement = document.querySelector(".total");
-      totalElement.textContent = `Total Age of Guests: ${totalAge}`;
-      
+      // Initialize total age
+      updateTotalAge();
     </script>
   </body>
 </html>
